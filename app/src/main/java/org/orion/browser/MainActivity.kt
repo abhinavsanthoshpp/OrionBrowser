@@ -93,6 +93,7 @@ fun BrowserApp(activity: FragmentActivity) {
     var pageProgress by remember { mutableIntStateOf(0) }
     var canGoBack by remember { mutableStateOf(false) }
     var canGoForward by remember { mutableStateOf(false) }
+    var activeWebView by remember { mutableStateOf<android.webkit.WebView?>(null) }
 
     // Stats flows
     val adsBlockedTotal by AdBlockEngine.adsBlockedTotal.collectAsState()
@@ -102,13 +103,14 @@ fun BrowserApp(activity: FragmentActivity) {
     val currentTab = tabs.getOrNull(activeTabIndex) ?: tabs.first()
 
     // Handle Android system back gesture
-    BackHandler(enabled = isSearchDialogOpen || isTabSwitcherOpen || isShieldSheetOpen || canGoBack) {
+    BackHandler(enabled = isSearchDialogOpen || isTabSwitcherOpen || isShieldSheetOpen || canGoBack || (currentTab.url.isNotEmpty() && currentTab.url != "about:blank")) {
         when {
             isSearchDialogOpen -> isSearchDialogOpen = false
             isTabSwitcherOpen -> isTabSwitcherOpen = false
             isShieldSheetOpen -> isShieldSheetOpen = false
-            canGoBack -> {
-                // Trigger webview back navigation
+            canGoBack && activeWebView != null -> activeWebView?.goBack()
+            currentTab.url.isNotEmpty() && currentTab.url != "about:blank" -> {
+                tabs[activeTabIndex] = currentTab.copy(url = "about:blank", title = "New Tab")
             }
         }
     }
@@ -159,7 +161,19 @@ fun BrowserApp(activity: FragmentActivity) {
                         },
                         onProgressChanged = { progress -> pageProgress = progress },
                         onCanGoBackChanged = { canGoBack = it },
-                        onCanGoForwardChanged = { canGoForward = it }
+                        onCanGoForwardChanged = { canGoForward = it },
+                        onWebViewCreated = { webView -> activeWebView = webView },
+                        onDownloadRequested = { url, filename ->
+                            coroutineScope.launch {
+                                Toast.makeText(activity, "Downloading $filename…", Toast.LENGTH_SHORT).show()
+                                val result = SegmentDownloader.downloadMedia(activity, url, filename)
+                                if (result.isSuccess) {
+                                    Toast.makeText(activity, "Saved to Downloads: $filename", Toast.LENGTH_LONG).show()
+                                } else {
+                                    Toast.makeText(activity, "Download failed", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
                     )
                 }
             }
@@ -173,10 +187,16 @@ fun BrowserApp(activity: FragmentActivity) {
                 adsBlockedCount = AdBlockEngine.getSessionBlockedCount(),
                 detectedMediaCount = detectedMediaList.size,
                 onBack = {
-                    // Navigate back
+                    if (canGoBack && activeWebView != null) {
+                        activeWebView?.goBack()
+                    } else if (currentTab.url.isNotEmpty() && currentTab.url != "about:blank") {
+                        tabs[activeTabIndex] = currentTab.copy(url = "about:blank", title = "New Tab")
+                    }
                 },
                 onForward = {
-                    // Navigate forward
+                    if (canGoForward && activeWebView != null) {
+                        activeWebView?.goForward()
+                    }
                 },
                 onUrlClick = { isSearchDialogOpen = true },
                 onShieldClick = { isShieldSheetOpen = true },

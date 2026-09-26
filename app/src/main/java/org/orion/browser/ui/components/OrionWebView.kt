@@ -36,6 +36,8 @@ fun OrionWebView(
     onProgressChanged: (Int) -> Unit,
     onCanGoBackChanged: (Boolean) -> Unit,
     onCanGoForwardChanged: (Boolean) -> Unit,
+    onWebViewCreated: (WebView) -> Unit = {},
+    onDownloadRequested: (url: String, filename: String) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -43,6 +45,7 @@ fun OrionWebView(
     AndroidView(
         factory = { ctx ->
             WebView(ctx).apply {
+                onWebViewCreated(this)
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
@@ -65,6 +68,15 @@ fun OrionWebView(
                     // Low-network optimization
                     cacheMode = if (isDataSaverEnabled) WebSettings.LOAD_DEFAULT else WebSettings.LOAD_CACHE_ELSE_NETWORK
                     mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+                }
+
+                setDownloadListener { downloadUrl, _, contentDisposition, mimetype, _ ->
+                    val filename = try {
+                        android.webkit.URLUtil.guessFileName(downloadUrl, contentDisposition, mimetype)
+                    } catch (_: Exception) {
+                        "Download_${System.currentTimeMillis()}"
+                    }
+                    onDownloadRequested(downloadUrl, filename)
                 }
 
                 webViewClient = object : WebViewClient() {
