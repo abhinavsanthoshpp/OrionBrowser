@@ -1,17 +1,17 @@
-# 🌌 Orion Browser for Android
+# 🌌 Orion Browser (Android & iOS)
 
 <p align="center">
   <img src="app/src/main/res/drawable/ic_launcher_foreground.xml" width="120" height="120" alt="Orion Browser Logo" />
 </p>
 
 <p align="center">
-  <b>A privacy-hardened, high-performance Android web browser blending the aesthetic of Tor, the ad-blocking power of Brave, and high-speed multi-threaded media downloading.</b>
+  <b>A privacy-hardened, high-performance cross-platform web browser (Android & iOS) blending the aesthetic of Tor, the ad-blocking power of Brave, and high-speed media downloading.</b>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android_8.0+-3DDC84?style=flat&logo=android&logoColor=white" alt="Android" />
-  <img src="https://img.shields.io/badge/Language-Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white" alt="Kotlin" />
-  <img src="https://img.shields.io/badge/UI-Jetpack_Compose-4285F4?style=flat&logo=jetpackcompose&logoColor=white" alt="Compose" />
+  <img src="https://img.shields.io/badge/Platform-Android_8.0+_%7C_iOS_16.0+-3DDC84?style=flat&logo=android&logoColor=white" alt="Platform" />
+  <img src="https://img.shields.io/badge/Language-Kotlin_%7C_Swift-7F52FF?style=flat&logo=kotlin&logoColor=white" alt="Languages" />
+  <img src="https://img.shields.io/badge/UI-Compose_%7C_SwiftUI-4285F4?style=flat&logo=swift&logoColor=white" alt="UI" />
   <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat" alt="License" />
 </p>
 
@@ -60,25 +60,23 @@
 
 ```
 OrionBrowser/
-├── app/
-│   ├── src/main/
-│   │   ├── java/org/orion/browser/
-│   │   │   ├── adblock/           # AdBlock & Cosmetic Filter engine
-│   │   │   ├── downloader/        # Media sniffer & 4-thread chunk downloader
-│   │   │   ├── media/             # Background playback foreground service
-│   │   │   ├── network/           # DNS-over-HTTPS & DataSaver manager
-│   │   │   ├── rewards/           # Orion Points ledger & sponsored cards
-│   │   │   ├── ui/
-│   │   │   │   ├── components/    # BottomBar, ShieldSheet, NTP, Tabs, Dialogs
-│   │   │   │   └── theme/         # Tor Obsidian & Purple Color scheme
-│   │   │   ├── vault/             # Biometric authentication manager
-│   │   │   ├── MainActivity.kt    # Main state controller
-│   │   │   └── OrionApplication.kt
-│   │   └── res/                   # Drawables, mipmaps, strings, colors
+├── app/                           # Android Application (Kotlin + Jetpack Compose)
+│   ├── src/main/java/org/orion/browser/
+│   │   ├── adblock/               # AdBlock & Cosmetic Filter engine
+│   │   ├── downloader/            # Media sniffer & 4-thread chunk downloader
+│   │   ├── media/                 # Background playback foreground service
+│   │   ├── network/               # DNS-over-HTTPS & DataSaver manager
+│   │   ├── rewards/               # Orion Points ledger & sponsored cards
+│   │   ├── ui/                    # Jetpack Compose UI (Tor theme)
+│   │   └── vault/                 # Biometric authentication manager
 │   └── build.gradle.kts
-├── docs/
-│   ├── ARCHITECTURE.md            # Detailed engineering specification
-│   └── BROWSER_ANALYSIS.md        # Comprehensive browser ecosystem comparison
+├── ios/                           # iOS Application (Swift + SwiftUI + WebKit)
+│   └── OrionBrowser/
+│       ├── Core/                  # WebKit ContentBlocker, MediaSniffer, Rewards
+│       ├── Theme/                 # SwiftUI Tor Obsidian & Violet theme
+│       ├── Views/                 # OrionWebView, BottomBarView, SecurityShieldView
+│       └── Resources/             # content-blocker-rules.json, Info.plist
+├── docs/                          # Architecture blueprints & ecosystem analysis
 └── build.gradle.kts
 ```
 
@@ -86,22 +84,18 @@ OrionBrowser/
 
 ## 🛠️ Building & Running
 
-### Prerequisites
-* **Android SDK** (API 34)
-* **JDK 17 or 21**
-* **Gradle 8.7+**
-
-### Build Debug APK
+### Android Build
+* **Prerequisites**: Android SDK (API 34), JDK 17 or 21, Gradle 8.7+
 ```bash
 ./gradlew assembleDebug
 ```
+Output: `app/build/outputs/apk/debug/orion.apk`
 
-The compiled APK will be located at:
-```
-app/build/outputs/apk/debug/orion.apk
-```
+### iOS Build
+* **Prerequisites**: macOS with Xcode 15+, iOS 16.0+ SDK
+* Open `ios/OrionBrowser` in Xcode and select target simulator or connected iPhone.
 
-### Install to Connected Device
+### Install Android APK to Connected Device
 ```bash
 adb install app/build/outputs/apk/debug/orion.apk
 ```

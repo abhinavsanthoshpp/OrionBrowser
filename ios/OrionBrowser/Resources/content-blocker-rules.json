@@ -1,0 +1,28 @@
+[
+    {
+        "trigger": {
+            "url-filter": ".*(doubleclick\\.net|googleadservices\\.com|googlesyndication\\.com|adservice\\.google\\.com|criteo\\.com|adnxs\\.com|taboola\\.com|outbrain\\.com).*"
+        },
+        "action": {
+            "type": "block"
+        }
+    },
+    {
+        "trigger": {
+            "url-filter": ".*(analytics\\.twitter\\.com|ads-twitter\\.com|analytics\\.tiktok\\.com|bat\\.bing\\.com|hotjar\\.com|clarity\\.ms).*"
+        },
+        "action": {
+            "type": "block"
+        }
+    },
+    {
+        "trigger": {
+            "url-filter": ".*",
+            "if-domain": ["*"]
+        },
+        "action": {
+            "type": "css-display-none",
+            "selector": "[id*=\"google_ads_\"], [id*=\"banner-ad\"], [class*=\"sponsored-post\"], [class*=\"ad-container\"], [class*=\"advertisement\"], ins.adsbygoogle, .native-ad, .taboola, .outbrain"
+        }
+    }
+]
