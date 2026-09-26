@@ -12,7 +12,10 @@ import android.webkit.WebViewClient
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -22,6 +25,7 @@ import org.orion.browser.downloader.MediaSniffer
 import org.orion.browser.network.DataSaverManager
 import org.orion.browser.ui.theme.TorObsidian
 import java.io.ByteArrayInputStream
+import java.util.concurrent.atomic.AtomicReference
 
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
@@ -41,6 +45,8 @@ fun OrionWebView(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    var lastLoadedUrl by remember(tab.id) { mutableStateOf("") }
+    val currentPageUrlRef = remember { AtomicReference(tab.url) }
 
     AndroidView(
         factory = { ctx ->
@@ -56,7 +62,7 @@ fun OrionWebView(
                     // Tor security levels control JavaScript
                     javaScriptEnabled = securityLevel != SecurityLevel.SAFEST
                     domStorageEnabled = securityLevel != SecurityLevel.SAFEST
-                    databaseEnabled = !tab.isSecret
+                    databaseEnabled = true
 
                     // Privacy & Security settings
                     allowFileAccess = false
@@ -84,34 +90,46 @@ fun OrionWebView(
                         view: WebView?,
                         request: WebResourceRequest?
                     ): WebResourceResponse? {
-                        val url = request?.url?.toString() ?: return null
+                        try {
+                            if (request == null) return null
+                            val url = request.url?.toString() ?: return null
 
-                        // 1. Inspect for downloadable media streams
-                        MediaSniffer.inspectUrl(view?.url, url)
+                            // NEVER block or intercept the main frame web page itself
+                            if (request.isForMainFrame) {
+                                return null
+                            }
 
-                        // 2. Orion Shields Ad & Tracker Blocker
-                        if (isAdBlockEnabled && AdBlockEngine.isAdOrTracker(url, view?.url)) {
-                            // Drop request by returning an empty 204 No Content response
-                            return WebResourceResponse(
-                                "text/plain",
-                                "UTF-8",
-                                204,
-                                "No Content",
-                                emptyMap(),
-                                ByteArrayInputStream(ByteArray(0))
-                            )
-                        }
+                            // Use thread-safe atomic reference to avoid calling view.getUrl() on worker thread
+                            val pageUrl = currentPageUrlRef.get()
 
-                        // 3. Data-saver heavy image suppression on metered connections
-                        if (DataSaverManager.shouldSuppressImage(context, url)) {
-                            return WebResourceResponse(
-                                "image/png",
-                                "UTF-8",
-                                204,
-                                "No Content",
-                                emptyMap(),
-                                ByteArrayInputStream(ByteArray(0))
-                            )
+                            // 1. Inspect for downloadable media streams
+                            MediaSniffer.inspectUrl(pageUrl, url)
+
+                            // 2. Orion Shields Ad & Tracker Blocker
+                            if (isAdBlockEnabled && AdBlockEngine.isAdOrTracker(url, pageUrl)) {
+                                return WebResourceResponse(
+                                    "text/plain",
+                                    "UTF-8",
+                                    204,
+                                    "No Content",
+                                    emptyMap(),
+                                    ByteArrayInputStream(ByteArray(0))
+                                )
+                            }
+
+                            // 3. Data-saver heavy image suppression on metered connections
+                            if (isDataSaverEnabled && DataSaverManager.shouldSuppressImage(context, url)) {
+                                return WebResourceResponse(
+                                    "image/png",
+                                    "UTF-8",
+                                    204,
+                                    "No Content",
+                                    emptyMap(),
+                                    ByteArrayInputStream(ByteArray(0))
+                                )
+                            }
+                        } catch (_: Throwable) {
+                            return null
                         }
 
                         return super.shouldInterceptRequest(view, request)
@@ -120,6 +138,7 @@ fun OrionWebView(
                     override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                         super.onPageStarted(view, url, favicon)
                         url?.let {
+                            currentPageUrlRef.set(it)
                             onUrlChanged(it)
                             MediaSniffer.onPageStarted(it)
                         }
@@ -129,7 +148,10 @@ fun OrionWebView(
 
                     override fun onPageFinished(view: WebView?, url: String?) {
                         super.onPageFinished(view, url)
-                        url?.let { onUrlChanged(it) }
+                        url?.let {
+                            currentPageUrlRef.set(it)
+                            onUrlChanged(it)
+                        }
                         onCanGoBackChanged(view?.canGoBack() ?: false)
                         onCanGoForwardChanged(view?.canGoForward() ?: false)
 
@@ -160,6 +182,8 @@ fun OrionWebView(
                 }
 
                 if (tab.url.isNotEmpty() && tab.url != "about:blank") {
+                    lastLoadedUrl = tab.url
+                    currentPageUrlRef.set(tab.url)
                     loadUrl(tab.url, DataSaverManager.getExtraHeaders())
                 }
             }
@@ -167,7 +191,9 @@ fun OrionWebView(
         update = { webView ->
             webView.settings.javaScriptEnabled = securityLevel != SecurityLevel.SAFEST
 
-            if (tab.url.isNotEmpty() && tab.url != "about:blank" && webView.url != tab.url) {
+            if (tab.url.isNotEmpty() && tab.url != "about:blank" && tab.url != lastLoadedUrl) {
+                lastLoadedUrl = tab.url
+                currentPageUrlRef.set(tab.url)
                 webView.loadUrl(tab.url, DataSaverManager.getExtraHeaders())
             }
         },

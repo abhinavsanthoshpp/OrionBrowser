@@ -276,14 +276,20 @@ fun BrowserApp(activity: FragmentActivity) {
             isOpen = isSearchDialogOpen,
             initialQuery = if (currentTab.url == "about:blank") "" else currentTab.url,
             onSearch = { target ->
-                val formattedUrl = if (target.startsWith("http://") || target.startsWith("https://")) {
-                    target
-                } else if (target.contains(".") && !target.contains(" ")) {
-                    "https://$target"
+                val trimmed = target.trim()
+                val formattedUrl = if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+                    trimmed
+                } else if (trimmed.contains(".") && !trimmed.contains(" ")) {
+                    "https://$trimmed"
                 } else {
-                    "https://duckduckgo.com/?q=${target.replace(" ", "+")}"
+                    val encoded = try {
+                        java.net.URLEncoder.encode(trimmed, "UTF-8")
+                    } catch (_: Exception) {
+                        trimmed.replace(" ", "+")
+                    }
+                    "https://duckduckgo.com/?q=$encoded"
                 }
-                tabs[activeTabIndex] = currentTab.copy(url = formattedUrl, title = target)
+                tabs[activeTabIndex] = currentTab.copy(url = formattedUrl, title = trimmed)
                 isSearchDialogOpen = false
             },
             onDismiss = { isSearchDialogOpen = false }
