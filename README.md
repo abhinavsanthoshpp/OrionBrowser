@@ -98,12 +98,12 @@ OrionBrowser/
 
 The compiled APK will be located at:
 ```
-app/build/outputs/apk/debug/app-debug.apk
+app/build/outputs/apk/debug/orion.apk
 ```
 
 ### Install to Connected Device
 ```bash
-adb install app/build/outputs/apk/debug/app-debug.apk
+adb install app/build/outputs/apk/debug/orion.apk
 ```
 
 ---
