@@ -180,7 +180,7 @@ fun SecurityShieldSheet(
                 Column(modifier = Modifier.padding(12.dp)) {
                     ShieldToggleRow(
                         icon = Icons.Default.Block,
-                        title = "Brave Shields Adblock",
+                        title = "Orion Shields Adblock",
                         subtitle = "Blocks ads, fingerprinting, and analytics",
                         checked = isAdBlockEnabled,
                         onCheckedChange = onToggleAdBlock

@@ -102,7 +102,7 @@ fun NewTabPageView(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Brave-style Privacy Stats Grid (Odometer)
+        // Privacy Stats Grid (Odometer)
         Row(
             modifier = Modifier
                 .fillMaxWidth()

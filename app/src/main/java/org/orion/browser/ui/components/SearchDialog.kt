@@ -143,7 +143,7 @@ fun SearchDialog(
             val sampleSuggestions = listOf(
                 "duckduckgo privacy",
                 "tor browser download",
-                "brave adblock list",
+                "orion adblock filter",
                 "hacker news",
                 "fast stream video"
             ).filter { it.contains(query, ignoreCase = true) || query.isEmpty() }

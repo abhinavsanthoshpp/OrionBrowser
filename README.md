@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <b>A privacy-hardened, high-performance cross-platform web browser (Android & iOS) blending the aesthetic of Tor, the ad-blocking power of Brave, and high-speed media downloading.</b>
+  <b>A privacy-hardened, high-performance cross-platform web browser (Android & iOS) with sub-millisecond native ad-blocking, multi-stage Tor security controls, and high-speed media downloading.</b>
 </p>
 
 <p align="center">
@@ -28,17 +28,17 @@
   * **Safest**: Disables JavaScript globally across all pages.
 * **One-Tap "New Identity"**: Immediately incinerates all active tabs, cookies, cache, and session storage.
 
-### 2. 🚫 Brave-Grade Native Adblocker
+### 2. 🚫 Orion Shields: Sub-Millisecond Native Adblocker
 * **Pre-Network Interception**: Intercepts outgoing requests in milliseconds, dropping tracking scripts, DoubleClick, Google Analytics, and ad banners before network dispatch.
 * **Cosmetic Filter Injection**: Collapses blank ad spaces so web pages render clean without empty gaps.
 * **Live Shields Counter**: Real-time counter of trackers and ads blocked, bandwidth saved, and estimated browsing time saved.
 
-### 3. ⚡ Firefox-Style Fast Search & Low-Network Booster
+### 3. ⚡ Turbo DNS & Low-Network Data Saver
 * **DNS-over-HTTPS (DoH)**: Integrates Cloudflare (`1.1.1.1`) and Quad9 DoH to bypass slow ISP DNS resolvers.
 * **Data Saver & Image Suppression**: Automatically sends `Save-Data: on` headers and suppresses heavy images on metered connections.
 * **Instant Suggestion Trie**: Offline prefix-search engine providing instant suggestions while typing.
 
-### 4. 🚀 Parrot-Style Fast Video Downloader
+### 4. 🚀 Turbo Multi-Threaded Fast Video Downloader
 * **Media Sniffer**: Automatically detects `.mp4`, `.webm`, and `.m3u8` (HLS) video streams from web pages and HTML5 video tags.
 * **Multi-Threaded 4x Acceleration**: Splits single downloads into 4 concurrent byte-range slices for maximum download speed.
 * **Audio Extraction**: One-tap option to extract pure audio (MP3) from video streams.
@@ -106,7 +106,6 @@ adb install app/build/outputs/apk/debug/orion.apk
 
 ## 📜 Documentation
 * [Technical Architecture & Blueprint](docs/ARCHITECTURE.md)
-* [Comprehensive Browser Ecosystem Analysis](docs/BROWSER_ANALYSIS.md)
 
 ---
 

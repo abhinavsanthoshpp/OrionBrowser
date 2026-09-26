@@ -87,7 +87,7 @@ fun MediaDownloadDialog(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = "Parrot Fast Multi-Threaded Engine",
+                        text = "Turbo Fast Multi-Threaded Engine",
                         color = ShieldGreen,
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Medium

@@ -89,7 +89,7 @@ fun OrionWebView(
                         // 1. Inspect for downloadable media streams
                         MediaSniffer.inspectUrl(view?.url, url)
 
-                        // 2. Brave-grade Ad & Tracker Blocker
+                        // 2. Orion Shields Ad & Tracker Blocker
                         if (isAdBlockEnabled && AdBlockEngine.isAdOrTracker(url, view?.url)) {
                             // Drop request by returning an empty 204 No Content response
                             return WebResourceResponse(

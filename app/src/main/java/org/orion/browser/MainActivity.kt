@@ -311,7 +311,7 @@ fun BrowserApp(activity: FragmentActivity) {
             onDismiss = { isShieldSheetOpen = false }
         )
 
-        // Media Download Dialog (Parrot-style Fast Downloader)
+        // Media Download Dialog (Turbo Fast Downloader)
         if (isMediaDownloadDialogOpen) {
             MediaDownloadDialog(
                 mediaList = detectedMediaList,

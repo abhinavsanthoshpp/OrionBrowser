@@ -2,8 +2,8 @@
 
 A comprehensive engineering specification for developing **Orion**, a high-performance, privacy-inspired Android web browser featuring:
 1. **Tor-inspired minimalist UI/UX**
-2. **Brave-grade native Rust ad/tracker blocking**
-3. **Firefox-style low-network search acceleration**
+2. **Sub-millisecond native Rust ad/tracker blocking**
+3. **Turbo low-network search acceleration**
 4. **Policy-compliant monetization & user reward economy**
 5. **Multi-threaded HLS/MP4 media sniffer & fast downloader**
 
@@ -20,14 +20,14 @@ flowchart TD
     Choice -->|"Path B: Custom Chromium Fork"| Blink["Chromium / Blink Source"]
     Choice -->|"Path C: Modern Android WebView Wrapper"| WebView["Kotlin + System WebView + Native Engine"]
 
-    Gecko --> GeckoNotes["Pros: Exact engine behind Tor Browser, native WebExtensions, independent of Google.<br/>Cons: Higher APK size (~45MB), learning GeckoSession APIs."]
-    Blink --> BlinkNotes["Pros: Brave's exact codebase, maximum web compatibility.<br/>Cons: Gigantic build overhead (100GB+ build tools, long compilation)."]
+    Gecko --> GeckoNotes["Pros: Native WebExtensions, independent engine architecture.<br/>Cons: Higher APK size (~45MB), learning GeckoSession APIs."]
+    Blink --> BlinkNotes["Pros: Maximum web compatibility.<br/>Cons: Gigantic build overhead (100GB+ build tools, long compilation)."]
     WebView --> WebNotes["Pros: Tiny APK (<10MB), rapid development, full UI flexibility.<br/>Cons: Reliant on system Chromium updates, request interception requires careful tuning."]
 ```
 
 ### Recommended Decision:
 * **For an immediate, modular MVP**: **Path C** (Kotlin + Jetpack Compose + Android `WebView` with JNI Native Rust `adblock-rust`).
-* **For an authentic Tor/Firefox fork**: **Path A** (Mozilla `GeckoView`), which natively runs Tor's circuit architecture and Firefox add-ons.
+* **For an authentic Tor/independent fork**: **Path A** (Mozilla `GeckoView`), which natively runs Tor's circuit architecture and add-ons.
 
 ---
 
@@ -69,9 +69,9 @@ The Tor Browser interface is defined by **minimalism, purple/dark charcoal tones
 
 ---
 
-## 3. Brave-Style Ad-Blocking Engine: Reverse Engineering & Integration
+## 3. High-Performance Ad-Blocking Engine: Architecture & Integration
 
-Brave achieves market-leading speed by executing ad-blocking **in native Rust compiled to C++**, avoiding the high latency of JavaScript-based blocking.
+Orion achieves market-leading speed by executing ad-blocking **in native compiled rules**, avoiding the high latency of JavaScript-based blocking.
 
 ```mermaid
 sequenceDiagram
@@ -79,7 +79,7 @@ sequenceDiagram
     participant Page as Web Page
     participant Engine as Android Engine (WebView/Gecko)
     participant JNI as JNI Bridge
-    participant Rust as adblock-rust Engine
+    participant Rust as adblock Engine
     participant Filter as Filter Cache (EasyList, uBlock)
 
     Page->>Engine: Requests resource (script.js, ad.banner)
@@ -93,9 +93,8 @@ sequenceDiagram
 ```
 
 ### Implementation Architecture:
-1. **The Core Engine (`adblock-rust`)**:
-   * Brave open-sourced their Rust engine: [`brave/adblock-rust`](https://github.com/brave/adblock-rust).
-   * It parses standard Adblock Plus and uBlock Origin filter rules (`EasyList`, `EasyPrivacy`, `Peter Lowe's List`).
+1. **The Core Engine**:
+   * Parses standard filter rules (`EasyList`, `EasyPrivacy`, `Peter Lowe's List`).
    * Uses serialized binary DAT files and Bloom filters for sub-millisecond rule matching.
 2. **Cross-Compilation for Android**:
    * Compile `adblock-rust` for Android architectures (`arm64-v8a`, `armeabi-v7a`, `x86_64`) using `cargo-ndk`.
@@ -122,7 +121,7 @@ sequenceDiagram
 
 ---
 
-## 4. Firefox-Style Fast Search & Low-Network Optimization
+## 4. High-Speed Fast Search & Low-Network Optimization
 
 To ensure blazing search and smooth browsing under poor network conditions (2G/3G or throttled cellular):
 
@@ -157,7 +156,7 @@ flowchart LR
 > 1. **Google AdMob Policy**: You **cannot** put AdMob banner or interstitial ads directly on top of or inside a web browser viewport displaying third-party websites (classified as invalid inventory/traffic).
 > 2. **Incentivized Click Prohibition**: You **cannot** pay users to click on Google Ads. Doing so leads to immediate, permanent account termination.
 > 
-> To earn money and allow users to earn without violating policies, use the **Brave Rewards model** or **Sponsored Hub model**.
+> To earn money and allow users to earn without violating policies, use a **Privacy-First Rewards model** or **Sponsored Hub model**.
 
 ```mermaid
 flowchart TD
@@ -182,7 +181,7 @@ flowchart TD
 
 ### Compliant Monetization Architecture:
 1. **Sponsored New Tab Page (NTP) Wallpapers & Cards**:
-   * When opening a new tab, show beautiful photography with a tasteful, non-intrusive sponsor logo in the corner (exactly like Brave's sponsored backgrounds). This is 100% compliant with ad network policies.
+   * When opening a new tab, show beautiful photography with a tasteful, non-intrusive sponsor logo in the corner. This is 100% compliant with ad network policies.
 2. **Opt-in "Orion Rewards" Hub**:
    * Users opt in to view curated, privacy-respecting native partner offers inside a dedicated "Rewards" section (separate from the web browsing screen).
    * **Points/Token Ledger**: Each verified daily engagement credits internal "Orion Stars" or cryptocurrency micro-tokens to the user's local encrypted wallet.
@@ -194,7 +193,7 @@ flowchart TD
 
 ## 6. Fast Video Downloader & Sniffer Engine
 
-Inspired by utility browsers like Soul Browser, Parrot, and 1DM:
+Inspired by modern high-speed utility downloaders:
 
 ```mermaid
 flowchart TD
@@ -243,10 +242,10 @@ flowchart TD
 
 ## 7. High-Impact "Must-Have" Features to Outcompete Rivals
 
-To stand out in the crowded browser market against Chrome, Brave, and Opera, Orion needs these user-favorite power features:
+To stand out in the crowded browser market against mainstream browsers, Orion needs these user-favorite power features:
 
 ### 1. Background Audio & Screen-Off Playback
-* **Problem**: Chrome and YouTube stop playing music or podcasts the moment users turn off their phone screen or switch to another app.
+* **Problem**: Standard browsers and YouTube stop playing music or podcasts the moment users turn off their phone screen or switch to another app.
 * **Orion Solution**:
   * Hook the `HTMLMediaElement` and override the browser visibility API (`document.hidden`, `visibilitychange`).
   * Run media playback inside an Android **Foreground Service** (`MediaSessionCompat`).
@@ -278,7 +277,7 @@ To stand out in the crowded browser market against Chrome, Brave, and Opera, Ori
 * Integrates Android's native Text-to-Speech engine so users can listen to articles like a podcast while commuting or working out.
 
 ### 7. Zero-Knowledge E2EE Sync Chain (No Email/Password Required)
-* Follows the **Brave Sync** paradigm: No personal email, phone number, or password required.
+* Follows a **Zero-Knowledge Sync** paradigm: No personal email, phone number, or password required.
 * Devices join a sync chain via a **QR code scan** or a **24-word encrypted mnemonic phrase**.
 * Bookmarks, rewards ledger, and settings are end-to-end encrypted before leaving the device.
 

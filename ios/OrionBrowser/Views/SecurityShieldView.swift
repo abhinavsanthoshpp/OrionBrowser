@@ -77,7 +77,7 @@ struct SecurityShieldView: View {
             // Feature Toggles
             VStack(spacing: 12) {
                 Toggle(isOn: $isAdBlockEnabled) {
-                    Label("Brave Shields Adblock", systemImage: "hand.raised.fill")
+                    Label("Orion Shields Adblock", systemImage: "hand.raised.fill")
                         .foregroundColor(.textPrimary)
                 }
                 .tint(.torPurple)
