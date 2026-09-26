@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.OrionBrowser" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">#120E16</item>
+        <item name="android:navigationBarColor">#120E16</item>
+        <item name="android:windowBackground">#120E16</item>
+    </style>
+</resources>

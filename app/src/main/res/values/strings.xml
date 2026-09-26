@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Orion</string>
+    <string name="search_hint">Search or enter web address…</string>
+    <string name="shield_standard">Shield: Standard</string>
+    <string name="shield_safer">Shield: Safer</string>
+    <string name="shield_safest">Shield: Safest</string>
+    <string name="new_tab">New Tab</string>
+    <string name="secret_tab">Secret Tab</string>
+    <string name="nuke_identity">New Identity</string>
+    <string name="nuke_description">Wipe all tabs, cookies, and cached data immediately</string>
+    <string name="download_video">Download Media</string>
+    <string name="extract_audio">Download as Audio (MP3)</string>
+    <string name="rewards_title">Orion Rewards</string>
+</resources>

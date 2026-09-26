@@ -1,0 +1,9 @@
+<resources>
+    <color name="tor_obsidian">#120E16</color>
+    <color name="tor_slate">#1E1826</color>
+    <color name="tor_purple">#7D4698</color>
+    <color name="tor_purple_bright">#9C5FB8</color>
+    <color name="shield_green">#27AE60</color>
+    <color name="shield_amber">#E67E22</color>
+    <color name="shield_red">#E74C3C</color>
+</resources>
