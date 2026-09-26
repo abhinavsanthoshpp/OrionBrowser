@@ -40,6 +40,7 @@ import org.orion.browser.ui.components.OrionWebView
 import org.orion.browser.ui.components.SearchDialog
 import org.orion.browser.ui.components.SecurityLevel
 import org.orion.browser.ui.components.SecurityShieldSheet
+import org.orion.browser.ui.components.SupportDeveloperDialog
 import org.orion.browser.ui.components.TabSwitcherView
 import org.orion.browser.ui.theme.OrionTheme
 import org.orion.browser.ui.theme.TorObsidian
@@ -88,6 +89,7 @@ fun BrowserApp(activity: FragmentActivity) {
     var isSearchDialogOpen by remember { mutableStateOf(false) }
     var isTabSwitcherOpen by remember { mutableStateOf(false) }
     var isMediaDownloadDialogOpen by remember { mutableStateOf(false) }
+    var isSupportDevDialogOpen by remember { mutableStateOf(false) }
 
     // Web navigation states
     var pageProgress by remember { mutableIntStateOf(0) }
@@ -103,8 +105,9 @@ fun BrowserApp(activity: FragmentActivity) {
     val currentTab = tabs.getOrNull(activeTabIndex) ?: tabs.first()
 
     // Handle Android system back gesture
-    BackHandler(enabled = isSearchDialogOpen || isTabSwitcherOpen || isShieldSheetOpen || canGoBack || (currentTab.url.isNotEmpty() && currentTab.url != "about:blank")) {
+    BackHandler(enabled = isSupportDevDialogOpen || isSearchDialogOpen || isTabSwitcherOpen || isShieldSheetOpen || canGoBack || (currentTab.url.isNotEmpty() && currentTab.url != "about:blank")) {
         when {
+            isSupportDevDialogOpen -> isSupportDevDialogOpen = false
             isSearchDialogOpen -> isSearchDialogOpen = false
             isTabSwitcherOpen -> isTabSwitcherOpen = false
             isShieldSheetOpen -> isShieldSheetOpen = false
@@ -142,7 +145,8 @@ fun BrowserApp(activity: FragmentActivity) {
                         onSearchClick = { isSearchDialogOpen = true },
                         onBookmarkClick = { targetUrl ->
                             tabs[activeTabIndex] = currentTab.copy(url = targetUrl)
-                        }
+                        },
+                        onSupportDevClick = { isSupportDevDialogOpen = true }
                     )
                 } else {
                     OrionWebView(
@@ -308,6 +312,7 @@ fun BrowserApp(activity: FragmentActivity) {
                 AdBlockEngine.resetSessionBlockedCount()
                 Toast.makeText(activity, "New Identity Applied. All tabs wiped.", Toast.LENGTH_SHORT).show()
             },
+            onSupportDevClick = { isSupportDevDialogOpen = true },
             onDismiss = { isShieldSheetOpen = false }
         )
 
@@ -340,5 +345,11 @@ fun BrowserApp(activity: FragmentActivity) {
                 onDismiss = { isMediaDownloadDialogOpen = false }
             )
         }
+
+        // Support Developer & Donations Dialog
+        SupportDeveloperDialog(
+            isOpen = isSupportDevDialogOpen,
+            onDismiss = { isSupportDevDialogOpen = false }
+        )
     }
 }

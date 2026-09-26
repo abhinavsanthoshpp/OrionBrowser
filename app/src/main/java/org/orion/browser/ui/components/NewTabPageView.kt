@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CardGiftcard
 import androidx.compose.material.icons.filled.Code
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Search
@@ -44,6 +45,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import org.orion.browser.ui.theme.DividerDark
+import org.orion.browser.ui.theme.ShieldAmber
 import org.orion.browser.ui.theme.ShieldGreen
 import org.orion.browser.ui.theme.TextMuted
 import org.orion.browser.ui.theme.TextPrimary
@@ -59,7 +61,8 @@ fun NewTabPageView(
     adsBlockedTotal: Int,
     trackersBlockedTotal: Int,
     onSearchClick: () -> Unit,
-    onBookmarkClick: (String) -> Unit
+    onBookmarkClick: (String) -> Unit,
+    onSupportDevClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier
@@ -185,7 +188,68 @@ fun NewTabPageView(
             QuickBookmarkItem("GitHub", Icons.Default.Code, "https://github.com", onBookmarkClick)
         }
 
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(28.dp))
+
+        // Developer & Support Banner
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(16.dp))
+                .clickable { onSupportDevClick() },
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(containerColor = TorSlate),
+            border = androidx.compose.foundation.BorderStroke(1.dp, DividerDark)
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(14.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(CircleShape)
+                            .background(ShieldAmber.copy(alpha = 0.15f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Favorite,
+                            contentDescription = null,
+                            tint = ShieldAmber,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "Built by Abhinav Santhosh",
+                            color = TextPrimary,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            text = "100% Free & Private • Tap to Support 💛",
+                            color = TextMuted,
+                            fontSize = 11.sp
+                        )
+                    }
+                }
+                Text(
+                    text = "Donate →",
+                    color = TorPurpleBright,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(30.dp))
     }
 }
 

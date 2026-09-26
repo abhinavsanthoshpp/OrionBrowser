@@ -18,6 +18,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Block
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.DeleteSweep
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.NetworkCheck
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Shield
@@ -74,6 +75,7 @@ fun SecurityShieldSheet(
     onToggleOledBlack: (Boolean) -> Unit,
     onToggleDataSaver: (Boolean) -> Unit,
     onNukeIdentity: () -> Unit,
+    onSupportDevClick: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     if (!isOpen) return
@@ -243,6 +245,36 @@ fun SecurityShieldSheet(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "New Identity (Wipe All Data & Tabs)",
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // Support Developer & Donations Button
+            FilledTonalButton(
+                onClick = {
+                    onSupportDevClick()
+                    onDismiss()
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(12.dp),
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    containerColor = ShieldAmber.copy(alpha = 0.15f),
+                    contentColor = ShieldAmber
+                )
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "Developer & Donations (Abhinav Santhosh)",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold
                 )
