@@ -2,14 +2,9 @@ import SwiftUI
 
 struct NewTabPageView: View {
     let adsBlockedTotal: Int
-    let userPoints: Int
-    let estimatedValue: String
-    let sponsoredCards: [SponsoredCardItem]
 
     let onSearchClick: () -> Void
     let onBookmarkClick: (String) -> Void
-    let onSponsoredClick: (SponsoredCardItem) -> Void
-    let onClaimDaily: () -> Void
 
     var body: some View {
         ScrollView {
@@ -77,78 +72,6 @@ struct NewTabPageView: View {
                     BookmarkIcon(title: "GitHub", icon: "curlybraces", url: "https://github.com", onClick: onBookmarkClick)
                 }
                 .padding(.horizontal)
-
-                // Orion Rewards Summary Card
-                HStack {
-                    HStack(spacing: 12) {
-                        Circle()
-                            .fill(Color(hex: 0xF39C12).opacity(0.2))
-                            .frame(width: 38, height: 38)
-                            .overlay(
-                                Image(systemName: "star.fill")
-                                    .foregroundColor(Color(hex: 0xF39C12))
-                            )
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Orion Rewards")
-                                .font(.system(size: 14, weight: .bold))
-                                .foregroundColor(.textPrimary)
-
-                            Text("\(userPoints) Points (\(estimatedValue) USD)")
-                                .font(.system(size: 12, weight: .semibold))
-                                .foregroundColor(Color(hex: 0xF39C12))
-                        }
-                    }
-
-                    Spacer()
-
-                    Button(action: onClaimDaily) {
-                        Text("+25 Daily")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(Color.torPurple)
-                            .cornerRadius(8)
-                    }
-                }
-                .padding(14)
-                .background(Color.torSlate)
-                .cornerRadius(14)
-                .padding(.horizontal)
-
-                // Compliant Sponsored Partner Card
-                if let sponsor = sponsoredCards.first {
-                    VStack(alignment: .leading, spacing: 6) {
-                        HStack {
-                            Text("SPONSORED PARTNER")
-                                .font(.system(size: 10, weight: .bold))
-                                .tracking(1)
-                                .foregroundColor(.torPurpleBright)
-
-                            Spacer()
-
-                            Text("+\(sponsor.rewardPoints) Points")
-                                .font(.system(size: 11, weight: .bold))
-                                .foregroundColor(.shieldGreen)
-                        }
-
-                        Text(sponsor.title)
-                            .font(.system(size: 13, weight: .bold))
-                            .foregroundColor(.textPrimary)
-
-                        Text(sponsor.description)
-                            .font(.system(size: 11))
-                            .foregroundColor(.textSecondary)
-                    }
-                    .padding(14)
-                    .background(Color.torSlateLight)
-                    .cornerRadius(14)
-                    .padding(.horizontal)
-                    .onTapGesture {
-                        onSponsoredClick(sponsor)
-                    }
-                }
 
                 Spacer().frame(height: 40)
             }

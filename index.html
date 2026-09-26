@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orion Browser — The Privacy-Hardened Mobile Web Browser</title>
+    <meta name="description" content="Orion Browser combines the anonymity of Tor, the native ad-blocking of Brave, and a high-speed multi-threaded media downloader for Android & iOS.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%237D4698'/><circle cx='50' cy='50' r='25' fill='%239C5FB8'/></svg>">
+    <style>
+        :root {
+            --bg-obsidian: #0D0A12;
+            --bg-surface: #171220;
+            --bg-card: #20192D;
+            --border-color: #2F2442;
+            --tor-purple: #7D4698;
+            --tor-bright: #A052BE;
+            --tor-glow: rgba(160, 82, 190, 0.35);
+            --shield-green: #27AE60;
+            --shield-amber: #E67E22;
+            --text-primary: #F5F3F7;
+            --text-secondary: #A69EAF;
+            --text-muted: #6F677A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-obsidian);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Ambient Glow Background */
+        .ambient-glow {
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 600px;
+            background: radial-gradient(circle, var(--tor-glow) 0%, rgba(13, 10, 18, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 800;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+        }
+
+        .brand-logo {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--tor-purple), var(--tor-bright));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--tor-glow);
+        }
+
+        .brand-logo svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .btn-nav {
+            background: var(--tor-purple);
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px var(--tor-glow);
+        }
+
+        .btn-nav:hover {
+            background: var(--tor-bright);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 90px 0 60px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .badge-tor {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            color: var(--tor-bright);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .badge-pulse {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--shield-green);
+            box-shadow: 0 0 10px var(--shield-green);
+        }
+
+        h1 {
+            font-size: 3.6rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            max-width: 900px;
+            background: linear-gradient(180deg, #FFFFFF 0%, #A69EAF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin-bottom: 40px;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 60px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--tor-purple), var(--tor-bright));
+            color: white;
+            padding: 16px 36px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-decoration: none;
+            box-shadow: 0 10px 30px var(--tor-glow);
+            transition: all 0.25s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 40px rgba(160, 82, 190, 0.5);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            padding: 16px 28px;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--tor-purple);
+        }
+
+        /* Device Mockup */
+        .mockup-container {
+            max-width: 380px;
+            margin: 0 auto 80px;
+            background: var(--bg-surface);
+            border: 4px solid var(--border-color);
+            border-radius: 40px;
+            padding: 14px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 40px var(--tor-glow);
+        }
+
+        .mockup-screen {
+            background: var(--bg-obsidian);
+            border-radius: 28px;
+            padding: 24px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            text-align: left;
+        }
+
+        .mockup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mockup-stats {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .mockup-stat-val {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--shield-green);
+        }
+
+        .mockup-stat-lbl {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .mockup-search {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 12px 16px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mockup-bottombar {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            padding: 10px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.4rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .section-sub {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 60px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px 28px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--tor-bright);
+            box-shadow: 0 10px 30px rgba(125, 70, 152, 0.15);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: rgba(160, 82, 190, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 80px 0;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        td {
+            font-size: 0.95rem;
+        }
+
+        .highlight-col {
+            background: rgba(160, 82, 190, 0.1);
+            font-weight: 700;
+            color: var(--tor-bright);
+        }
+
+        /* Download CTA */
+        .download-box {
+            background: linear-gradient(135deg, var(--bg-surface), var(--bg-card));
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 60px 32px;
+            text-align: center;
+            margin: 60px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-box::before {
+            content: '';
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 300px;
+            background: radial-gradient(circle, var(--tor-glow) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .download-box h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .download-box p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 32px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 40px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--tor-bright);
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.4rem; }
+            .hero p { font-size: 1.05rem; }
+            .hero-actions { flex-direction: column; width: 100%; max-width: 320px; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <div class="container">
+        <!-- Navigation -->
+        <nav>
+            <a href="#" class="brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                </div>
+                ORION
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#comparison" class="nav-link">Comparison</a>
+                <a href="https://github.com/abhinavsanthoshpp/OrionBrowser" class="nav-link" target="_blank">GitHub</a>
+                <a href="https://github.com/abhinavsanthoshpp/OrionBrowser/releases/download/v1.0.0/orion.apk" class="btn-nav">Download APK</a>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="badge-tor">
+                <span class="badge-pulse"></span>
+                Tor Privacy &bull; Brave Shields &bull; Parrot Downloader
+            </div>
+            <h1>Browse Without Footprints. Stream Without Ads.</h1>
+            <p>
+                Orion Browser is a next-generation mobile browser engineered for high-performance privacy, sub-millisecond tracker blocking, and instant multi-threaded video stream extraction.
+            </p>
+            <div class="hero-actions">
+                <a href="https://github.com/abhinavsanthoshpp/OrionBrowser/releases/download/v1.0.0/orion.apk" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+                    Download orion.apk (v1.0.0)
+                </a>
+                <a href="https://github.com/abhinavsanthoshpp/OrionBrowser" class="btn-secondary" target="_blank">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    View Source Code
+                </a>
+            </div>
+
+            <!-- Device Mockup -->
+            <div class="mockup-container">
+                <div class="mockup-screen">
+                    <div class="mockup-header">
+                        <span style="font-weight: 800; font-size: 1.1rem; color: var(--tor-bright);">ORION</span>
+                        <span style="font-size: 0.8rem; color: var(--shield-green); font-weight: 700;">● SHIELDS ACTIVE</span>
+                    </div>
+
+                    <div class="mockup-stats">
+                        <div>
+                            <div class="mockup-stat-val">1,420</div>
+                            <div class="mockup-stat-lbl">Ads Dropped</div>
+                        </div>
+                        <div>
+                            <div class="mockup-stat-val">48 MB</div>
+                            <div class="mockup-stat-lbl">Data Saved</div>
+                        </div>
+                        <div>
+                            <div class="mockup-stat-val">2.8s</div>
+                            <div class="mockup-stat-lbl">Load Saved</div>
+                        </div>
+                    </div>
+
+                    <div class="mockup-search">
+                        🔍 Search or enter web address…
+                    </div>
+
+                    <div style="background: var(--bg-card); border-radius: 12px; padding: 12px; border: 1px solid var(--border-color); font-size: 0.85rem;">
+                        <span style="color: var(--shield-green); font-weight: 700;">✓ Tor Security: Standard</span><br/>
+                        <span style="color: var(--text-muted); font-size: 0.75rem;">Cloudflare DoH &bull; Fingerprint Randomizer</span>
+                    </div>
+
+                    <div class="mockup-bottombar">
+                        <span>◀</span>
+                        <span>▶</span>
+                        <span style="color: var(--shield-green); font-weight: 700;">🛡️ (14)</span>
+                        <span style="background: var(--border-color); padding: 2px 8px; border-radius: 6px; font-size: 0.75rem;">(3) Tabs</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Grid -->
+        <section id="features" class="features">
+            <h2 class="section-title">Engineered For Freedom</h2>
+            <p class="section-sub">Every feature in Orion is crafted to protect your identity and accelerate your browsing experience.</p>
+
+            <div class="grid-3">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Tor-Inspired Privacy Shield</h3>
+                    <p>Dynamic 3-stage security slider (Standard, Safer, Safest) disabling scripts and WebGL on untrusted sites, with a one-tap "New Identity" incinerator.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚫</div>
+                    <h3>Brave Shields Adblocking</h3>
+                    <p>Pre-network request drops evaluate queries in under 1 millisecond. Ad servers, DoubleClick, tracking pixels, and analytics are killed before connecting.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Firefox Fast Search & DoH</h3>
+                    <p>Encrypted Cloudflare (1.1.1.1) DNS-over-HTTPS bypasses slow ISP resolvers. Built-in Data Saver suppresses heavy images on metered cellular data.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Parrot 4x Video Downloader</h3>
+                    <p>Real-time media sniffer hooks HTML5 video tags, .mp4 files, and .m3u8 streams with 4-thread parallel chunk downloading and audio-only MP3 extraction.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Biometric Secret Vault</h3>
+                    <p>Keep your private tabs and downloaded media locked behind Android Fingerprint or iOS Face ID with AES-256 encrypted local storage.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎵</div>
+                    <h3>Screen-Off Background Audio</h3>
+                    <p>Foreground media service keeps YouTube audio, podcasts, and streams playing seamlessly when switching apps or locking your phone screen.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Section -->
+        <section id="comparison" class="comparison">
+            <h2 class="section-title">How Orion Compares</h2>
+            <p class="section-sub">See how Orion stacks up against mainstream and privacy alternatives.</p>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th class="highlight-col">Orion Browser</th>
+                            <th>Google Chrome</th>
+                            <th>Brave Browser</th>
+                            <th>Tor Browser</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Native Adblock</strong></td>
+                            <td class="highlight-col">✓ Built-in</td>
+                            <td>✗ None</td>
+                            <td>✓ Built-in</td>
+                            <td>✓ Built-in</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Media Sniffer & Downloader</strong></td>
+                            <td class="highlight-col">✓ 4x Multi-thread</td>
+                            <td>✗ None</td>
+                            <td>✗ None</td>
+                            <td>✗ None</td>
+                        </tr>
+                        <tr>
+                            <td><strong>DNS-over-HTTPS (DoH)</strong></td>
+                            <td class="highlight-col">✓ Default (1.1.1.1)</td>
+                            <td>Optional</td>
+                            <td>Optional</td>
+                            <td>Via Tor</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tor Security Sliders</strong></td>
+                            <td class="highlight-col">✓ Yes</td>
+                            <td>✗ No</td>
+                            <td>✗ No</td>
+                            <td>✓ Yes</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Biometric Secret Vault</strong></td>
+                            <td class="highlight-col">✓ Fingerprint/FaceID</td>
+                            <td>✗ No</td>
+                            <td>✗ No</td>
+                            <td>✗ No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Screen-off Background Audio</strong></td>
+                            <td class="highlight-col">✓ Yes</td>
+                            <td>✗ Blocked</td>
+                            <td>✓ Yes</td>
+                            <td>✗ No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Telemetry & User Tracking</strong></td>
+                            <td class="highlight-col">✓ Zero Telemetry</td>
+                            <td>High</td>
+                            <td>Low</td>
+                            <td>Zero</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Download Banner -->
+        <section class="download-box">
+            <h2>Experience The Real Open Web</h2>
+            <p>Download Orion Browser today for Android. Zero ads, zero bloat, pure speed.</p>
+            <a href="https://github.com/abhinavsanthoshpp/OrionBrowser/releases/download/v1.0.0/orion.apk" class="btn-primary">
+                Download orion.apk (21 MB)
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <p>Orion Browser is open-source under the <a href="https://github.com/abhinavsanthoshpp/OrionBrowser/blob/main/LICENSE" target="_blank">Apache 2.0 License</a>.</p>
+                <p style="margin-top: 8px;">Designed and engineered by <a href="https://github.com/abhinavsanthoshpp" target="_blank">Abhinav Santhosh</a>.</p>
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

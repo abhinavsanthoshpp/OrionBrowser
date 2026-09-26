@@ -43,7 +43,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import org.orion.browser.rewards.SponsoredCard
 import org.orion.browser.ui.theme.DividerDark
 import org.orion.browser.ui.theme.ShieldGreen
 import org.orion.browser.ui.theme.TextMuted
@@ -59,13 +58,8 @@ import org.orion.browser.ui.theme.TorSlateLight
 fun NewTabPageView(
     adsBlockedTotal: Int,
     trackersBlockedTotal: Int,
-    userPoints: Int,
-    estimatedValue: String,
-    sponsoredCards: List<SponsoredCard>,
     onSearchClick: () -> Unit,
-    onBookmarkClick: (String) -> Unit,
-    onSponsoredCardClick: (SponsoredCard) -> Unit,
-    onClaimDailyReward: () -> Unit
+    onBookmarkClick: (String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -189,119 +183,6 @@ fun NewTabPageView(
             QuickBookmarkItem("Tor Project", Icons.Default.Security, "https://torproject.org", onBookmarkClick)
             QuickBookmarkItem("Wikipedia", Icons.Default.Public, "https://wikipedia.org", onBookmarkClick)
             QuickBookmarkItem("GitHub", Icons.Default.Code, "https://github.com", onBookmarkClick)
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Orion Rewards Ledger Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = TorSlate),
-            shape = RoundedCornerShape(14.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(14.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(CircleShape)
-                            .background(Color(0xFFF39C12).copy(alpha = 0.2f)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Star,
-                            contentDescription = null,
-                            tint = Color(0xFFF39C12),
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = "Orion Rewards",
-                            color = TextPrimary,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
-                        )
-                        Text(
-                            text = "$userPoints Points ($estimatedValue USD)",
-                            color = Color(0xFFF39C12),
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(TorPurple)
-                        .clickable { onClaimDailyReward() }
-                        .padding(horizontal = 12.dp, vertical = 6.dp)
-                ) {
-                    Text(
-                        text = "+25 Daily",
-                        color = Color.White,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Non-intrusive Compliant Sponsored Card (Policy Compliant)
-        if (sponsoredCards.isNotEmpty()) {
-            val sponsor = sponsoredCards.first()
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onSponsoredCardClick(sponsor) },
-                colors = CardDefaults.cardColors(containerColor = TorSlateLight),
-                shape = RoundedCornerShape(14.dp)
-            ) {
-                Column(modifier = Modifier.padding(14.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "SPONSORED PARTNER",
-                            color = TorPurpleBright,
-                            fontSize = 10.sp,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 1.sp
-                        )
-                        Text(
-                            text = "+${sponsor.rewardPoints} Points",
-                            color = ShieldGreen,
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = sponsor.title,
-                        color = TextPrimary,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = sponsor.description,
-                        color = TextSecondary,
-                        fontSize = 11.sp
-                    )
-                }
-            }
         }
 
         Spacer(modifier = Modifier.height(40.dp))

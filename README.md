@@ -44,15 +44,17 @@
 * **Audio Extraction**: One-tap option to extract pure audio (MP3) from video streams.
 * **Google Play Compliance**: Built-in guard restricting YouTube downloads to comply with Google Play Developer Policies.
 
-### 5. 💰 Non-Intrusive Orion Rewards
-* **Policy Compliant**: Avoids invasive ad banners or incentivized traffic violations.
-* **New Tab Page Sponsored Cards**: Clean, non-intrusive sponsor cards (Proton VPN, Bitwarden, DuckDuckGo).
-* **Rewards Ledger**: Users accumulate internal Orion Points (+25 points daily) for active browsing.
-
-### 6. 🔒 Biometric Secret Vault & Background Media
+### 5. 🔒 Biometric Secret Vault & Background Media
 * **Biometric Authentication**: Fingerprint / PIN prompt required to unlock Secret Tabs.
 * **Background & Screen-Off Playback**: Audio and video continue playing when switching apps or locking your phone screen.
 * **OLED True-Black Dark Mode**: Universal shader forcing true `#000000` deep blacks for AMOLED power saving.
+
+---
+
+## 🌐 Official Download Website
+
+The responsive landing page is located at [`index.html`](index.html) (and in `docs/` for GitHub Pages).
+Users can download `orion.apk` directly with one click.
 
 ---
 
@@ -66,17 +68,17 @@ OrionBrowser/
 │   │   ├── downloader/            # Media sniffer & 4-thread chunk downloader
 │   │   ├── media/                 # Background playback foreground service
 │   │   ├── network/               # DNS-over-HTTPS & DataSaver manager
-│   │   ├── rewards/               # Orion Points ledger & sponsored cards
 │   │   ├── ui/                    # Jetpack Compose UI (Tor theme)
 │   │   └── vault/                 # Biometric authentication manager
 │   └── build.gradle.kts
 ├── ios/                           # iOS Application (Swift + SwiftUI + WebKit)
 │   └── OrionBrowser/
-│       ├── Core/                  # WebKit ContentBlocker, MediaSniffer, Rewards
+│       ├── Core/                  # WebKit ContentBlocker & MediaSniffer
 │       ├── Theme/                 # SwiftUI Tor Obsidian & Violet theme
 │       ├── Views/                 # OrionWebView, BottomBarView, SecurityShieldView
 │       └── Resources/             # content-blocker-rules.json, Info.plist
-├── docs/                          # Architecture blueprints & ecosystem analysis
+├── docs/                          # Architecture blueprints & GitHub Pages site
+├── index.html                     # Official download website
 └── build.gradle.kts
 ```
 

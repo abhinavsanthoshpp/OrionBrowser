@@ -32,7 +32,6 @@ import org.orion.browser.adblock.AdBlockEngine
 import org.orion.browser.downloader.MediaSniffer
 import org.orion.browser.downloader.SegmentDownloader
 import org.orion.browser.network.DataSaverManager
-import org.orion.browser.rewards.OrionRewardsManager
 import org.orion.browser.ui.components.BottomNavigationBar
 import org.orion.browser.ui.components.BrowserTab
 import org.orion.browser.ui.components.MediaDownloadDialog
@@ -99,8 +98,6 @@ fun BrowserApp(activity: FragmentActivity) {
     val adsBlockedTotal by AdBlockEngine.adsBlockedTotal.collectAsState()
     val trackersBlockedTotal by AdBlockEngine.trackersBlockedTotal.collectAsState()
     val detectedMediaList by MediaSniffer.currentMediaList.collectAsState()
-    val userPoints by OrionRewardsManager.userPoints.collectAsState()
-    val sponsoredCards by OrionRewardsManager.sponsoredCards.collectAsState()
 
     val currentTab = tabs.getOrNull(activeTabIndex) ?: tabs.first()
 
@@ -140,21 +137,9 @@ fun BrowserApp(activity: FragmentActivity) {
                     NewTabPageView(
                         adsBlockedTotal = adsBlockedTotal,
                         trackersBlockedTotal = trackersBlockedTotal,
-                        userPoints = userPoints,
-                        estimatedValue = OrionRewardsManager.getEstimatedUsdValue(),
-                        sponsoredCards = sponsoredCards,
                         onSearchClick = { isSearchDialogOpen = true },
                         onBookmarkClick = { targetUrl ->
                             tabs[activeTabIndex] = currentTab.copy(url = targetUrl)
-                        },
-                        onSponsoredCardClick = { sponsor ->
-                            OrionRewardsManager.addPoints(sponsor.rewardPoints)
-                            Toast.makeText(activity, "+${sponsor.rewardPoints} Orion Points Earned!", Toast.LENGTH_SHORT).show()
-                            tabs[activeTabIndex] = currentTab.copy(url = sponsor.targetUrl)
-                        },
-                        onClaimDailyReward = {
-                            OrionRewardsManager.addPoints(25)
-                            Toast.makeText(activity, "Daily reward claimed! +25 Points", Toast.LENGTH_SHORT).show()
                         }
                     )
                 } else {

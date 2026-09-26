@@ -10,7 +10,6 @@ struct BrowserTabItem: Identifiable, Equatable {
 struct ContentView: View {
     @StateObject private var adBlockEngine = AdBlockEngine.shared
     @StateObject private var mediaSniffer = MediaSniffer.shared
-    @StateObject private var rewardsManager = RewardsManager.shared
 
     @State private var tabs: [BrowserTabItem] = [
         BrowserTabItem(title: "New Tab", url: "about:blank")
@@ -51,19 +50,9 @@ struct ContentView: View {
                 if currentTab.url == "about:blank" || currentTab.url.isEmpty {
                     NewTabPageView(
                         adsBlockedTotal: adBlockEngine.adsBlockedTotal,
-                        userPoints: rewardsManager.userPoints,
-                        estimatedValue: rewardsManager.estimatedUsdValue,
-                        sponsoredCards: rewardsManager.sponsoredCards,
                         onSearchClick: { isSearchOverlayOpen = true },
                         onBookmarkClick: { url in
                             tabs[activeTabIndex].url = url
-                        },
-                        onSponsoredClick: { sponsor in
-                            rewardsManager.addPoints(sponsor.rewardPoints)
-                            tabs[activeTabIndex].url = sponsor.targetUrl
-                        },
-                        onClaimDaily: {
-                            rewardsManager.addPoints(25)
                         }
                     )
                 } else {
