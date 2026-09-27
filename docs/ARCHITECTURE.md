@@ -4,7 +4,7 @@ A comprehensive engineering specification for developing **Orion**, a high-perfo
 1. **Tor-inspired minimalist UI/UX**
 2. **Sub-millisecond native Rust ad/tracker blocking**
 3. **Turbo low-network search acceleration**
-4. **Policy-compliant monetization & user reward economy**
+4. **Compliant publisher monetization & developer patronage architecture**
 5. **Multi-threaded HLS/MP4 media sniffer & fast downloader**
 
 ---
@@ -149,45 +149,43 @@ flowchart LR
 
 ---
 
-## 5. Monetization & User Earning System (Policy & Compliance Strategy)
+## 5. Monetization & Developer Patronage Architecture (Policy & Compliance Strategy)
 
 > [!WARNING]
-> ### Critical Google Play Store & AdSense Rules
-> 1. **Google AdMob Policy**: You **cannot** put AdMob banner or interstitial ads directly on top of or inside a web browser viewport displaying third-party websites (classified as invalid inventory/traffic).
-> 2. **Incentivized Click Prohibition**: You **cannot** pay users to click on Google Ads. Doing so leads to immediate, permanent account termination.
+> ### Critical Ad Network & App Store Guidelines
+> 1. **No In-Viewport Web Overlays**: Never inject banners directly into third-party web content viewports (classified as invalid inventory/traffic).
+> 2. **No False Incentives**: Traffic must be authentic and user-driven.
 > 
-> To earn money and allow users to earn without violating policies, use a **Privacy-First Rewards model** or **Sponsored Hub model**.
+> To generate recurring project revenue while respecting user privacy, Orion implements a **Triple-Stream Monetization Architecture**.
 
 ```mermaid
 flowchart TD
-    subgraph BrowserSurface["Browser Shell (Compliant Ad Placements)"]
-        NTP["New Tab Page Sponsored Cards"]
-        News["Integrated Privacy News Feed"]
-        Rewards["Orion Rewards Portal (Off-Webview)"]
+    subgraph BrowserSurfaces["Orion Monetization Touchpoints"]
+        Dialog["Support Developer Dialog"]
+        NTP["New Tab Page Sponsor Badges"]
+        WebSite["Official Download Hub"]
     end
 
-    subgraph RevenueEngine["Revenue Distribution Engine"]
-        Advertiser["Sponsors / Partner Ad Networks"] --> Pool["Monthly Revenue Pool"]
-        Pool --> AdminSplit["Browser Operations & Profit (e.g. 40%)"]
-        Pool --> UserWallet["User Reward Vault (e.g. 60%)"]
+    subgraph RevenueStreams["Three Clean Revenue Streams"]
+        Dialog --> Monetag["1-Click Smartlink Ad (Monetag / PropellerAds)"]
+        Dialog --> UPI["Direct UPI Payments (₹0 Fees)"]
+        Dialog --> Coffee["Buy Me A Coffee (Global Cards & PayPal)"]
+        WebSite --> UPI
+        WebSite --> Monetag
     end
 
-    NTP --> Pool
-    News --> Pool
-    Rewards --> Pool
-
-    UserWallet --> Cashout["Redemption: Crypto / Gift Cards / Mobile Recharge"]
+    Monetag --> Payout["Weekly Ad Payouts ($5 Min Threshold)"]
+    UPI --> DirectBank["Instant Bank Settlement"]
+    Coffee --> CreatorBank["Creator Payout"]
 ```
 
-### Compliant Monetization Architecture:
-1. **Sponsored New Tab Page (NTP) Wallpapers & Cards**:
-   * When opening a new tab, show beautiful photography with a tasteful, non-intrusive sponsor logo in the corner. This is 100% compliant with ad network policies.
-2. **Opt-in "Orion Rewards" Hub**:
-   * Users opt in to view curated, privacy-respecting native partner offers inside a dedicated "Rewards" section (separate from the web browsing screen).
-   * **Points/Token Ledger**: Each verified daily engagement credits internal "Orion Stars" or cryptocurrency micro-tokens to the user's local encrypted wallet.
-   * **Redemption Pathways**: Users convert points to Amazon Gift Cards, mobile top-ups, or Web3 crypto payouts (USDC/SOL/BAT).
-3. **Search Engine Syndication Partnerships**:
-   * Partner with search engines that offer rev-share per query (e.g., Yahoo, Bing Search Syndicate, or specialized search partners). Every search conducted generates clean affiliate revenue.
+### Compliant Revenue Channels:
+1. **1-Click Smartlink / Direct Link (Monetag)**:
+   * Non-intrusive direct link sponsorship. When users choose to support development by viewing an ad, they open an isolated external link (Zone ID routing) without corrupting internal browser tabs.
+2. **Direct UPI & QR Code Integration**:
+   * Direct UPI integration (`abhinava6525@naviaxis`) allowing Indian users to send voluntary financial support directly to the developer with zero middleman commissions.
+3. **Global Creator Patronage (Buy Me A Coffee)**:
+   * Enables international supporters to contribute via Visa, Mastercard, Apple Pay, and PayPal.
 
 ---
 
@@ -319,9 +317,8 @@ OrionBrowser/
 │   │   │   ├── reader/                     # Clean reader view & Text-to-Speech
 │   │   │   │   ├── ReadabilityExtractor.kt
 │   │   │   │   └── TtsPlayer.kt
-│   │   │   └── rewards/                    # Non-intrusive rewards & points wallet
-│   │   │       ├── NTPAdManager.kt
-│   │   │       └── UserWalletLedger.kt
+│   │   │   └── support/                    # Developer patronage & direct monetization
+│   │   │       └── SupportDeveloperDialog.kt
 │   │   ├── cpp/                            # Native C++/Rust JNI bindings
 │   │   │   ├── CMakeLists.txt
 │   │   │   └── adblock_jni.cpp
@@ -344,4 +341,11 @@ OrionBrowser/
 | **Phase 4** | **Media Sniffer & Fast Downloader**| Implement MIME type detector, DOM media hook, multi-threaded 8-chunk HTTP range downloader, and `.m3u8` parser. |
 | **Phase 5** | **Media & Vault Experience** | Add Background Audio Foreground Service, Picture-in-Picture (PiP), and Biometric Vault for private downloads. |
 | **Phase 6** | **Reader View & Anti-Fingerprinting**| Integrate Readability engine, native TTS article read-aloud, WebRTC IP leak blocking, and Canvas noise injection. |
-| **Phase 7** | **Compliant Monetization & Release**| Build New Tab Page sponsored wallpaper system, local offline rewards wallet, Google Play YouTube guard, and release APK. |
+| **Phase 7** | **Compliant Monetization & Release**| Build developer patronage portal (UPI & Buy Me A Coffee), 1-click Monetag smartlink routing, Google Play YouTube guard, and release APK. |
+
+---
+
+## 📄 Copyright & Proprietary Rights
+
+**Copyright &copy; 2026 Abhinav Santhosh. All Rights Reserved.**  
+This architecture specification, technical design, and implementation codebase are proprietary and confidential. Unauthorized copying, reproduction, distribution, reverse engineering, or modification is strictly prohibited.
