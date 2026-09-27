@@ -73,6 +73,17 @@ struct NewTabPageView: View {
                 }
                 .padding(.horizontal)
 
+                // Developer Attribution & Copyright Notice
+                VStack(spacing: 4) {
+                    Text("Architected by Abhinav Santhosh")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.torPurpleBright)
+                    Text("© 2026 Abhinav Santhosh • All Rights Reserved")
+                        .font(.system(size: 10))
+                        .foregroundColor(.textMuted)
+                }
+                .padding(.top, 8)
+
                 Spacer().frame(height: 40)
             }
         }

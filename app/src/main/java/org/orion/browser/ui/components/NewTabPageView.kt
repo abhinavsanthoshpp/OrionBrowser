@@ -249,6 +249,15 @@ fun NewTabPageView(
             }
         }
 
+        Spacer(modifier = Modifier.height(14.dp))
+
+        Text(
+            text = "© 2026 Abhinav Santhosh • All Rights Reserved",
+            color = TextMuted.copy(alpha = 0.6f),
+            fontSize = 11.sp,
+            textAlign = TextAlign.Center
+        )
+
         Spacer(modifier = Modifier.height(30.dp))
     }
 }

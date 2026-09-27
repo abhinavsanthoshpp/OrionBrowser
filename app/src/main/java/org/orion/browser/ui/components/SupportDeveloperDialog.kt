@@ -128,7 +128,7 @@ fun SupportDeveloperDialog(
                     .verticalScroll(rememberScrollState())
             ) {
                 Text(
-                    text = "Orion Browser is 100% free, private, and open-source. Built without corporate investors or tracking ads. Your donations directly support continuous updates and development!",
+                    text = "Orion Browser is 100% free, private, and independent. Built without corporate investors or tracking ads. Your donations directly support continuous updates and development!",
                     color = TextSecondary,
                     fontSize = 13.sp,
                     lineHeight = 18.sp,
@@ -272,6 +272,17 @@ fun SupportDeveloperDialog(
                     onClick = {
                         openUrl(context, githubUrl)
                     }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "© 2026 Abhinav Santhosh • All Rights Reserved\nUnauthorized reproduction or copying is strictly prohibited.",
+                    color = TextMuted,
+                    fontSize = 11.sp,
+                    lineHeight = 15.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
         },

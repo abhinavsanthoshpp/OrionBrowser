@@ -12,7 +12,7 @@
   <img src="https://img.shields.io/badge/Platform-Android_8.0+_%7C_iOS_16.0+-3DDC84?style=flat&logo=android&logoColor=white" alt="Platform" />
   <img src="https://img.shields.io/badge/Language-Kotlin_%7C_Swift-7F52FF?style=flat&logo=kotlin&logoColor=white" alt="Languages" />
   <img src="https://img.shields.io/badge/UI-Compose_%7C_SwiftUI-4285F4?style=flat&logo=swift&logoColor=white" alt="UI" />
-  <img src="https://img.shields.io/badge/License-Apache_2.0-blue.svg?style=flat" alt="License" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/Copyright-All_Rights_Reserved-red.svg?style=flat" alt="Copyright All Rights Reserved" /></a>
 </p>
 
 ---
@@ -109,6 +109,8 @@ adb install app/build/outputs/apk/debug/orion.apk
 
 ---
 
-## 📄 License
+## 📄 Copyright & All Rights Reserved
 
-Licensed under the [Apache License, Version 2.0](LICENSE).
+**Copyright &copy; 2026 [Abhinav Santhosh](https://github.com/abhinavsanthoshpp). All Rights Reserved.**
+
+This software, its source code, UI designs, and related assets are proprietary. Unauthorized copying, modification, reverse engineering, redistribution, or commercial use of any part of this software is strictly prohibited without explicit written permission from **Abhinav Santhosh**. See [LICENSE](LICENSE) for full details.
