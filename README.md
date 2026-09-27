@@ -1,17 +1,17 @@
-# 🌌 Orion Browser (Android & iOS)
+# 🌌 Orion Browser (Android, iOS, Linux & Windows)
 
 <p align="center">
   <img src="app/src/main/res/drawable/ic_launcher_foreground.xml" width="120" height="120" alt="Orion Browser Logo" />
 </p>
 
 <p align="center">
-  <b>A privacy-hardened, high-performance cross-platform web browser (Android & iOS) with sub-millisecond native ad-blocking, multi-stage Tor security controls, and high-speed media downloading.</b>
+  <b>A privacy-hardened, high-performance cross-platform web browser (Android, iOS, Linux & Windows) with sub-millisecond native ad-blocking, multi-stage Tor security controls, and high-speed media downloading.</b>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Platform-Android_8.0+_%7C_iOS_16.0+-3DDC84?style=flat&logo=android&logoColor=white" alt="Platform" />
-  <img src="https://img.shields.io/badge/Language-Kotlin_%7C_Swift-7F52FF?style=flat&logo=kotlin&logoColor=white" alt="Languages" />
-  <img src="https://img.shields.io/badge/UI-Compose_%7C_SwiftUI-4285F4?style=flat&logo=swift&logoColor=white" alt="UI" />
+  <img src="https://img.shields.io/badge/Platforms-Android_%7C_iOS_%7C_Linux_%7C_Windows-3DDC84?style=flat&logo=android&logoColor=white" alt="Platforms" />
+  <img src="https://img.shields.io/badge/Languages-Kotlin_%7C_Swift_%7C_JS-7F52FF?style=flat" alt="Languages" />
+  <img src="https://img.shields.io/badge/UI-Compose_%7C_SwiftUI_%7C_Desktop-4285F4?style=flat" alt="UI" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/Copyright-All_Rights_Reserved-red.svg?style=flat" alt="Copyright All Rights Reserved" /></a>
 </p>
 
@@ -77,6 +77,12 @@ OrionBrowser/
 │       ├── Theme/                 # SwiftUI Tor Obsidian & Violet theme
 │       ├── Views/                 # OrionWebView, BottomBarView, SecurityShieldView
 │       └── Resources/             # content-blocker-rules.json, Info.plist
+├── desktop/                       # Desktop Application (Linux & Windows)
+│   ├── main.js                    # Multi-tab orchestrator & network interceptor
+│   ├── preload.js                 # Secure IPC bridge
+│   ├── ui/                        # Desktop Tor Obsidian Chrome & New Tab Page
+│   ├── orion-linux.sh             # Linux launcher
+│   └── orion-windows.bat          # Windows launcher
 ├── docs/                          # Architecture blueprints & GitHub Pages site
 ├── index.html                     # Official download website
 └── build.gradle.kts
@@ -96,6 +102,17 @@ Output: `app/build/outputs/apk/debug/orion.apk`
 ### iOS Build
 * **Prerequisites**: macOS with Xcode 15+, iOS 16.0+ SDK
 * Open `ios/OrionBrowser` in Xcode and select target simulator or connected iPhone.
+
+### Desktop Build (Linux & Windows)
+* **Prerequisites**: Node.js 18+ & npm
+```bash
+cd desktop
+npm install
+npm start
+```
+* **Quick Launch Scripts**:
+  * **Linux**: `./desktop/orion-linux.sh`
+  * **Windows**: `desktop\orion-windows.bat`
 
 ### Install Android APK to Connected Device
 ```bash

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>New Tab — Orion Browser</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #07050A;
+      --bg-card: #120C1C;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --tor-purple: #7D4698;
+      --tor-violet: #9C5FB8;
+      --emerald: #10B981;
+      --text-primary: #F8FAFC;
+      --text-secondary: #CBD5E1;
+      --text-muted: #94A3B8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 20px 20px;
+      overflow-x: hidden;
+      background-image: radial-gradient(circle at 50% 15%, rgba(156, 95, 184, 0.15) 0%, transparent 60%);
+    }
+
+    .main-container {
+      width: 100%;
+      max-width: 860px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+
+    /* Logo & Branding */
+    .brand-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #BA68C8, #7D4698);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 35px rgba(156, 95, 184, 0.45);
+    }
+    .brand-logo svg {
+      width: 36px;
+      height: 36px;
+      fill: #FFF;
+    }
+    .brand-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      background: linear-gradient(135deg, #FFF 40%, var(--tor-violet) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Privacy Odometer */
+    .privacy-odometer {
+      display: flex;
+      align-items: center;
+      background: rgba(18, 12, 28, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 14px 24px;
+      width: 100%;
+      max-width: 640px;
+      justify-content: space-around;
+      backdrop-filter: blur(10px);
+    }
+    .odometer-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .odometer-val {
+      font-size: 1.35rem;
+      font-weight: 800;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .odometer-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .divider {
+      width: 1px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Search Box */
+    .search-box-wrap {
+      width: 100%;
+      max-width: 640px;
+      position: relative;
+    }
+    .search-input {
+      width: 100%;
+      height: 52px;
+      background: rgba(20, 14, 32, 0.85);
+      border: 1px solid rgba(156, 95, 184, 0.3);
+      border-radius: 26px;
+      padding: 0 54px 0 22px;
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      outline: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      transition: all 0.2s;
+    }
+    .search-input:focus {
+      border-color: var(--tor-violet);
+      box-shadow: 0 0 0 3px rgba(156, 95, 184, 0.25), 0 8px 30px rgba(0, 0, 0, 0.6);
+      background: #181126;
+    }
+    .search-btn {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--tor-purple);
+      color: #FFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .search-btn:hover {
+      background: var(--tor-violet);
+      box-shadow: 0 0 12px rgba(156, 95, 184, 0.5);
+    }
+
+    /* Bookmarks Grid */
+    .bookmarks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      width: 100%;
+      max-width: 640px;
+    }
+    .bookmark-card {
+      background: rgba(22, 15, 34, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-primary);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .bookmark-card:hover {
+      border-color: var(--tor-violet);
+      background: rgba(33, 23, 51, 0.85);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    }
+    .bookmark-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: #241A38;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+    .bookmark-title {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    /* Creator Patronage Card */
+    .creator-card {
+      background: linear-gradient(135deg, rgba(31, 20, 48, 0.7), rgba(20, 14, 32, 0.85));
+      border: 1px solid rgba(156, 95, 184, 0.3);
+      border-radius: 16px;
+      padding: 18px 24px;
+      width: 100%;
+      max-width: 640px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    }
+    .creator-info h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+    .creator-info p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .support-btn-action {
+      background: linear-gradient(135deg, var(--tor-purple), var(--tor-violet));
+      color: #FFF;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .support-btn-action:hover {
+      box-shadow: 0 0 15px rgba(156, 95, 184, 0.6);
+      transform: translateY(-1px);
+    }
+
+    /* Copyright Footer */
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.6;
+      margin-top: 30px;
+    }
+    footer strong {
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="main-container">
+    <!-- Brand -->
+    <div class="brand-header">
+      <div class="brand-logo">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+      </div>
+      <h1 class="brand-title">ORION</h1>
+    </div>
+
+    <!-- Live Privacy Stats -->
+    <div class="privacy-odometer">
+      <div class="odometer-stat">
+        <span class="odometer-val" style="color: var(--emerald);" id="ads-blocked">1,420</span>
+        <span class="odometer-label">Trackers Blocked</span>
+      </div>
+      <div class="divider"></div>
+      <div class="odometer-stat">
+        <span class="odometer-val" style="color: var(--tor-violet);" id="data-saved">85 MB</span>
+        <span class="odometer-label">Data Saved</span>
+      </div>
+      <div class="divider"></div>
+      <div class="odometer-stat">
+        <span class="odometer-val" style="color: #38BDF8;" id="time-saved">28s</span>
+        <span class="odometer-label">Time Saved</span>
+      </div>
+    </div>
+
+    <!-- Search Omnibox -->
+    <div class="search-box-wrap">
+      <form id="search-form">
+        <input type="text" id="search-query" class="search-input" placeholder="Search with DuckDuckGo or enter URL…" autofocus />
+        <button type="submit" class="search-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <!-- Bookmarks Grid -->
+    <div class="bookmarks-grid">
+      <div class="bookmark-card" data-url="https://duckduckgo.com">
+        <div class="bookmark-icon">🦆</div>
+        <span class="bookmark-title">DuckDuckGo</span>
+      </div>
+      <div class="bookmark-card" data-url="https://torproject.org">
+        <div class="bookmark-icon">🧅</div>
+        <span class="bookmark-title">Tor Project</span>
+      </div>
+      <div class="bookmark-card" data-url="https://wikipedia.org">
+        <div class="bookmark-icon">📖</div>
+        <span class="bookmark-title">Wikipedia</span>
+      </div>
+      <div class="bookmark-card" data-url="https://github.com">
+        <div class="bookmark-icon">🐙</div>
+        <span class="bookmark-title">GitHub</span>
+      </div>
+      <div class="bookmark-card" data-url="https://reddit.com">
+        <div class="bookmark-icon">🤖</div>
+        <span class="bookmark-title">Reddit</span>
+      </div>
+      <div class="bookmark-card" data-url="https://news.ycombinator.com">
+        <div class="bookmark-icon">🔶</div>
+        <span class="bookmark-title">Hacker News</span>
+      </div>
+      <div class="bookmark-card" data-url="https://proton.me">
+        <div class="bookmark-icon">🛡️</div>
+        <span class="bookmark-title">Proton</span>
+      </div>
+      <div class="bookmark-card" data-url="https://youtube.com">
+        <div class="bookmark-icon">▶️</div>
+        <span class="bookmark-title">YouTube</span>
+      </div>
+    </div>
+
+    <!-- Creator Support Card -->
+    <div class="creator-card">
+      <div class="creator-info">
+        <h3>Built by Abhinav Santhosh 💛</h3>
+        <p>100% Free & Independent • Direct UPI & Global Support</p>
+      </div>
+      <button class="support-btn-action" id="support-modal-trigger">Support Creator</button>
+    </div>
+  </div>
+
+  <!-- Copyright Footer -->
+  <footer>
+    <p><strong>&copy; 2026 Abhinav Santhosh. All Rights Reserved.</strong></p>
+    <p>Unauthorized copying, reproduction, or distribution is strictly prohibited.</p>
+  </footer>
+
+  <script>
+    document.getElementById('search-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = document.getElementById('search-query').value.trim();
+      if (!q) return;
+
+      let targetUrl = q;
+      if (q.includes('.') && !q.includes(' ')) {
+        if (!q.startsWith('http://') && !q.startsWith('https://')) {
+          targetUrl = 'https://' + q;
+        }
+      } else {
+        targetUrl = 'https://duckduckgo.com/?q=' + encodeURIComponent(q);
+      }
+
+      window.parent.postMessage({ type: 'navigate', url: targetUrl }, '*');
+    });
+
+    document.querySelectorAll('.bookmark-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const url = card.getAttribute('data-url');
+        window.parent.postMessage({ type: 'navigate', url }, '*');
+      });
+    });
+
+    document.getElementById('support-modal-trigger').addEventListener('click', () => {
+      window.parent.postMessage({ type: 'open-support-modal' }, '*');
+    });
+  </script>
+</body>
+</html>
